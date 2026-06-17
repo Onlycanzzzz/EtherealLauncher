@@ -19,7 +19,7 @@ jobs:
         
       - name: Build
         run: |
-          xmake f -p windows -m release
+          xmake f -p windows -m release -y
           xmake
           
       - name: Upload artifact
@@ -38,7 +38,7 @@ jobs:
         
       - name: Build
         run: |
-          xmake f -p macosx -m release
+          xmake f -p macosx -m release -y
           xmake
           
       - name: Upload artifact
@@ -48,7 +48,7 @@ jobs:
           path: build/macosx/x64/release/EtherealLauncher
 
   build-linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       
@@ -62,7 +62,7 @@ jobs:
         
       - name: Build
         run: |
-          xmake f -p linux -m release
+          xmake f -p linux -m release -y
           xmake
           
       - name: Upload artifact
@@ -72,7 +72,7 @@ jobs:
           path: build/linux/x86_64/release/EtherealLauncher
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [build-windows, build-macos, build-linux]
     steps:
       - uses: actions/checkout@v4
@@ -87,6 +87,6 @@ jobs:
       
       - name: Run tests
         run: |
-          xmake f -p linux -m debug
+          xmake f -p linux -m debug -y
           xmake
           xmake run test

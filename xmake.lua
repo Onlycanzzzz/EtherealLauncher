@@ -9,7 +9,7 @@ set_policy("package.requires_auto_check", true)
 add_repositories("webview-xmake https://github.com/Winterreisender/webview-xmake.git")
 add_requires("webview 0.10.0.230210")
 if is_plat("linux") then
-    add_requires("pkgconfig::gtk+-3.0", "pkgconfig::webkit2gtk-4.0", {system = true})
+    add_requires("pkgconfig::gtk+-3.0", "pkgconfig::libwebkit2gtk-4.1-dev", {system = true})
 end
 
 -- nlohmann/json
@@ -23,7 +23,7 @@ add_packages("libcurl")
 -- webview
 if is_plat("linux") then
     add_packages("pkgconfig::gtk+-3.0")
-    add_packages("pkgconfig::webkit2gtk-4.0")
+    add_packages("pkgconfig::libwebkit2gtk-4.1-dev")
 end
 if is_plat("macosx") then
     set_languages("c++11")
