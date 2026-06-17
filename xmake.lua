@@ -9,7 +9,7 @@ set_policy("package.requires_auto_check", true)
 add_repositories("webview-xmake https://github.com/Winterreisender/webview-xmake.git")
 add_requires("webview 0.10.0.230210")
 if is_plat("linux") then
-    add_requires("pkgconfig::gtk+-3.0", "pkgconfig::libwebkit2gtk-4.1-dev", {system = true})
+    add_requires("pkgconfig::gtk+-3.0", "pkgconfig::webkit2gtk-4.1", {system = true})
 end
 
 -- nlohmann/json
