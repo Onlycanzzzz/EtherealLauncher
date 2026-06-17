@@ -1,6 +1,10 @@
 add_rules("mode.debug", "mode.release")
 set_languages("c++17")
 
+-- Enable automatic installation and checking of required packages
+set_policy("package.requires_auto_install", true)
+set_policy("package.requires_auto_check", true)
+
 -- webview-xmake compiler toolchain
 add_repositories("webview-xmake https://github.com/Winterreisender/webview-xmake.git")
 add_requires("webview 0.10.0.230210")
