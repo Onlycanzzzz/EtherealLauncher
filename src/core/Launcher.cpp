@@ -1,18 +1,39 @@
 #include "core/Launcher.h"
 #include <cstdlib>
-#include <filesystem>
 #include <string>
 #include <vector>
 
+#ifdef __APPLE__
+#include <sys/stat.h>
+#include <unistd.h>
+
+static bool fileExists(const std::string& path) {
+  struct stat buffer;
+  return (stat(path.c_str(), &buffer) == 0);
+}
+#else
+#include <filesystem>
+namespace fs = std::filesystem;
+#endif
+
 namespace ETL {
 namespace core {
-
-namespace fs = std::filesystem;
 
 bool Launcher::checkJavaPath(const std::string& path) {
   if (path.empty()) {
     return false;
   }
+
+#ifdef __APPLE__
+  if (!fileExists(path)) {
+    return false;
+  }
+#else
+  if (!fs::exists(path)) {
+    return false;
+  }
+#endif
+
   int result = system((path + " -version").c_str());
   return result == 0;
 }
