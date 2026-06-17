@@ -51,10 +51,13 @@ target("EtherealLauncher")
     add_includedirs("src")
 
 target("test")
+
     set_kind("binary")
-    add_files("src/*.cpp")
+    add_files("src/**.cpp")
+    add_includedirs("src")
+
     add_tests("test_with_stub", {
-        -- files = "tests/stub_*.cpp"
+        files = "tests/stub_*.cpp",  -- 添加额外的测试文件
         defines = "TEST_MODE",
-        remove_files = "src/main.cpp"
+        remove_files = "src/main.cpp"  -- 移除不需要的文件
     })
