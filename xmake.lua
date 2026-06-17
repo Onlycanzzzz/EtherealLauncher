@@ -28,6 +28,9 @@ end
 if is_plat("macosx") then
     set_languages("c++11")
     add_frameworks("WebKit")
+
+    add_cxflags("-mmacosx-version-min=10.15")
+    add_ldflags("-mmacosx-version-min=10.15")
 end
 
 if is_plat("windows") then
