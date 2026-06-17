@@ -1,8 +1,12 @@
 add_rules("mode.debug", "mode.release")
 set_languages("c++17")
 
-set_policy("build.accelerate", true)
-
+-- webview-xmake compiler toolchain
+add_repositories("webview-xmake https://github.com/Winterreisender/webview-xmake.git")
+add_requires("webview 0.10.0.230210")
+if is_plat("linux") then
+    add_requires("pkgconfig::gtk+-3.0", "pkgconfig::webkit2gtk-4.0", {system = true})
+end
 
 -- nlohmann/json
 add_requires("nlohmann_json", {configs = {shared = false}})
@@ -13,26 +17,13 @@ add_requires("libcurl", {configs = {shared = false, ssl = true}})
 add_packages("libcurl")
     
 -- webview
-if is_plat("windows") then
-    -- Windows
-    add_requires("webview", {configs = {backend = "webview2"}})
-    add_packages("webview")
-
-    add_syslinks("user32", "shell32", "ole32", "shlwapi")
-        
-elseif is_plat("macosx") then
-    -- macOS: use WKWebView 
-    add_requires("webview", {configs = {backend = "cocoa"}})
-    add_packages("webview")
-    
-    add_frameworks("Cocoa", "WebKit", "Security")
-    
-elseif is_plat("linux") then
-    -- Linux: use WebKitGTK
-    add_requires("webview", {configs = {backend = "gtk"}})
-    add_packages("webview")
-        
-    add_syslinks("webkit2gtk-4.0", "gtk-3", "glib-2.0")
+if is_plat("linux") then
+    add_packages("pkgconfig::gtk+-3.0")
+    add_packages("pkgconfig::webkit2gtk-4.0")
+end
+if is_plat("macosx") then
+    set_languages("c++11")
+    add_frameworks("WebKit")
 end
 
 if is_plat("windows") then
