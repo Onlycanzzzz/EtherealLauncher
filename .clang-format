@@ -1,0 +1,92 @@
+---
+# Based on Google style
+BasedOnStyle: Google
+
+# Indentation width: 2 spaces
+IndentWidth: 2
+ColumnLimit: 100
+
+# ============================================
+# Indentation settings
+# ============================================
+UseTab: Never
+TabWidth: 2
+ContinuationIndentWidth: 2
+AccessModifierOffset: -2
+
+# ============================================
+# Brace style (Google: attach)
+# ============================================
+BreakBeforeBraces: Attach
+
+# ============================================
+# Pointer/Reference alignment (Google: left)
+# ============================================
+PointerAlignment: Left
+
+# ============================================
+# Space control
+# ============================================
+SpaceAfterCStyleCast: false
+SpaceAfterLogicalNot: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeParens: ControlStatements
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceInEmptyParentheses: false
+SpacesBeforeTrailingComments: 2
+SpacesInAngles: false
+SpacesInContainerLiterals: true
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+
+# ============================================
+# Line breaking control
+# ============================================
+AllowShortFunctionsOnASingleLine: None
+AllowShortLambdasOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+BreakBeforeTernaryOperators: true
+BreakConstructorInitializersBeforeComma: false
+
+# ============================================
+# Alignment control
+# ============================================
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+AlignTrailingComments: true
+
+# ============================================
+# Comment control
+# ============================================
+ReflowComments: true
+
+# ============================================
+# Include sorting (Google style)
+# ============================================
+IncludeBlocks: Preserve
+SortIncludes: true
+IncludeCategories:
+  - Regex:           '^<.*\.h>'
+    Priority:        1
+    SortPriority:    0
+  - Regex:           '^<.*'
+    Priority:        2
+    SortPriority:    0
+  - Regex:           '.*'
+    Priority:        3
+    SortPriority:    0
+
+# ============================================
+# Miscellaneous
+# ============================================
+FixNamespaceComments: true
+PenaltyBreakAssignment: 2
+PenaltyBreakBeforeFirstCallParameter: 1
+PenaltyBreakComment: 300
+PenaltyBreakFirstLessLess: 120
+PenaltyBreakString: 1000
+PenaltyExcessCharacter: 1000000
+PenaltyReturnTypeOnItsOwnLine: 200
+SortUsingDeclarations: true
