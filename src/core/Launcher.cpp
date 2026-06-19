@@ -5,7 +5,8 @@
 #include <vector>
 
 #define _LIBCPP_DISABLE_AVAILABILITY  // For macOS 10.14+ to use std::filesystem
-#ifdef __APPLE__                      // macOS
+#ifdef __APPLE__
+#include <dirent.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -13,7 +14,32 @@ static bool fileExists(const std::string& path) {
   struct stat buffer;
   return (stat(path.c_str(), &buffer) == 0);
 }
-#else  // Windows/Linux
+
+static void collectJars(const std::string& dir, std::string& classpath, const std::string& sep) {
+  DIR* d = opendir(dir.c_str());
+  if (!d)
+    return;
+
+  struct dirent* entry;
+  while ((entry = readdir(d)) != nullptr) {
+    std::string name = entry->d_name;
+    if (name == "." || name == "..")
+      continue;
+
+    std::string fullPath = dir + "/" + name;
+    struct stat st;
+    if (stat(fullPath.c_str(), &st) == 0) {
+      if (S_ISDIR(st.st_mode)) {
+        collectJars(fullPath, classpath, sep);
+      } else if (name.size() > 4 && name.substr(name.size() - 4) == ".jar") {
+        classpath += sep + fullPath;
+      }
+    }
+  }
+  closedir(d);
+}
+#else
+// Windows/Linux
 #include <filesystem>
 namespace fs = std::filesystem;
 #endif
@@ -52,11 +78,20 @@ std::pair<int, std::string> Launcher::buildClasspath(const std::string& minecraf
 
   std::string classpath;
   std::string versionJar = minecraftPath + "/versions/" + gameVersion + "/" + gameVersion + ".jar";
+#ifdef __APPLE__
+  if (fileExists(versionJar)) {
+    classpath += versionJar;
+  }
+#else
   if (std::filesystem::exists(versionJar)) {
     classpath += versionJar;
   }
+#endif
 
   std::string librariesPath = minecraftPath + "/libraries";
+#ifdef __APPLE__
+  collectJars(librariesPath, classpath, sep);
+#else
   if (std::filesystem::exists(librariesPath)) {
     for (const auto& entry : std::filesystem::recursive_directory_iterator(librariesPath)) {
       if (entry.is_regular_file() && entry.path().extension() == ".jar") {
@@ -64,6 +99,7 @@ std::pair<int, std::string> Launcher::buildClasspath(const std::string& minecraf
       }
     }
   }
+#endif
 
   return std::make_pair(classpath.empty() ? 0 : 1, classpath);
 }
@@ -73,7 +109,7 @@ Launcher::LaunchStatus Launcher::launchGame(Launcher::LaunchOptions options) {
   // std::cout << "[Launcher] MinecraftPath: " << options.MinecraftPath << std::endl;
   // std::cout << "[Launcher] GameVersion: " << options.GameVersion << std::endl;
   // std::cout << "[Launcher] Current path: " << std::filesystem::current_path() << std::endl;
-  std::cout << "[Launcher] Using Java: " << options.JavaPath << std::endl;
+  // std::cout << "[Launcher] Using Java: " << options.JavaPath << std::endl;
   std::vector<std::string> cmd;
   // JVM arguments
   cmd.push_back(options.JavaPath);
