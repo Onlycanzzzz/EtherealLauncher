@@ -21,6 +21,7 @@ public:
     std::string MinecraftPath = "";
     int MaxMemory = 2048;
     std::string PlayerName = "";
+    std::string GameVersion = "";
     std::string VersionType = "EtherealLauncher";
     std::pair<int, int> WindowSize = {800, 680};
     std::vector<std::string> extraArgs;
@@ -34,8 +35,8 @@ public:
   bool checkJavaPath(const std::string& path);
 
 private:
-  LaunchStatus offlineLaunch(LaunchOptions options);
-  LaunchStatus onlineLaunch(LaunchOptions options);
+  std::pair<int, std::string> buildClasspath(const std::string& minecraftPath,
+                                             const std::string& gameVersion);
 };
 
 }  // namespace core
