@@ -2,8 +2,8 @@ add_rules("mode.debug", "mode.release")
 set_languages("c++17")
 
 -- Enable automatic installation and checking of required packages
-set_policy("package.requires_auto_install", true)
-set_policy("package.requires_auto_check", true)
+-- set_policy("package.requires_auto_install", true)
+-- set_policy("package.requires_auto_check", true)
 
 -- webview-xmake compiler toolchain
 add_repositories("webview-xmake https://github.com/Winterreisender/webview-xmake.git")
@@ -74,9 +74,21 @@ target("test")
     set_kind("binary")
     add_files("src/**.cpp")
     add_includedirs("src")
+    add_packages("webview", "nlohmann_json", "libcurl")
+    if is_plat("windows") then
+        add_syslinks("user32", "shell32", "ole32", "shlwapi", "ws2_32", "advapi32")
+    elseif is_plat("macosx") then
+        add_frameworks("WebKit", "Cocoa", "Security", "CoreFoundation")
+        add_cxflags("-mmacosx-version-min=10.15")
+        add_ldflags("-mmacosx-version-min=10.15")
+    elseif is_plat("linux") then
+        add_packages("pkgconfig::gtk+-3.0", "pkgconfig::webkit2gtk-4.1")
+        add_syslinks("pthread", "dl")
+        add_ldflags("-pthread")
+    end
 
     add_tests("test_with_stub", {
-        files = "tests/stub_*.cpp", 
+        files = "tests/stub_*.cpp",
         defines = "TEST_MODE",
         remove_files = "src/main.cpp"
     })
