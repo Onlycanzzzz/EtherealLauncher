@@ -54,6 +54,19 @@ end)
 target("EtherealLauncher")
     set_kind("binary")
 
+    add_packages("webview", "nlohmann_json", "libcurl")
+    if is_plat("windows") then
+        add_syslinks("user32", "shell32", "ole32", "shlwapi", "ws2_32", "advapi32")
+    elseif is_plat("macosx") then
+        add_frameworks("WebKit", "Cocoa", "Security", "CoreFoundation")
+        add_cxflags("-mmacosx-version-min=10.15")
+        add_ldflags("-mmacosx-version-min=10.15")
+    elseif is_plat("linux") then
+        add_packages("pkgconfig::gtk+-3.0", "pkgconfig::webkit2gtk-4.1")
+        add_syslinks("pthread", "dl")
+        add_ldflags("-pthread")
+    end
+
     add_files("src/**.cpp")
     add_includedirs("src")
 
